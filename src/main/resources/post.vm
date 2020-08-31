@@ -1,4 +1,15 @@
-#parse("root1.vm")
-            <h1>$post.title()</h1>
-            $utils.renderPost($post, $service)
-#parse("root2.vm")
+<!DOCTYPE html>
+<html lang="$lang">
+<head>
+    #include("head.vm")
+    <title>$title - $post.title()</title>
+</head>
+<body>
+    #include("nav.vm")
+    <div id="main">
+        <h1>$post.title()</h1>
+        $utils.renderPost($post, $service)
+    </div>
+    #include("footer.vm")
+</body>
+</html>

@@ -1,14 +1,25 @@
-#parse("root1.vm")
-            <dl>
-                #foreach( $post in $posts )
-                    <dt>
-                        <a href="$post.path()">$post.title()</a> by $post.author(), $utils.renderDate($post.created())
-                    </dt>
-                    #if ( $post.descr() )
-                        <dd>
-                            $utils.renderDescr($post, $service)
-                        </dd>
-                    #end
-                #end
-            </dl>
-#parse("root2.vm")
+<!DOCTYPE html>
+<html lang="$lang">
+<head>
+    #include("head.vm")
+    <title>$title - $post.title()</title>
+</head>
+<body>
+    #include("nav.vm")
+    <div id="main">
+        <dl>
+            #foreach( $post in $posts )
+            <dt>
+                <a href="$post.path()">$post.title()</a> by $post.author(), $utils.renderDate($post.created())
+            </dt>
+            #if ( $post.descr() )
+            <dd>
+                $utils.renderDescr($post, $service)
+            </dd>
+            #end
+            #end
+        </dl>
+    </div>
+    #include("footer.vm")
+</body>
+</html>

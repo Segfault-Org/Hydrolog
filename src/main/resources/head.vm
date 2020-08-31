@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="$lang">
-<head>
-    <meta charset="utf-8"/>
-    <title>$title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
             BODY {
                 margin-left: 10px;
                 margin-right: 10px;
@@ -38,10 +34,4 @@
                 width: 100%;
                 text-align: center;
             }
-        </style>
-</head>
-<body>
-<div id="left">
-    <p class="nav"><a href="/">Home</a></p>
-    <p class="navhead"></p></div>
-<div id="main">
+</style>

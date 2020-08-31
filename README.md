@@ -71,7 +71,7 @@ post.file.root=/mnt/your/post/root/dir/ # Posts root dir
 # Default HTML Template
 html.default.lang=en # HTML lang tag
 html.default.title=My blog # Homepage title
-html.footer=Footer # Footer, can be empty
+html.default.override=. # Velocity override folder
 ```
 
 # License

@@ -16,22 +16,24 @@ import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
 
+import static org.apache.velocity.runtime.RuntimeConstants.FILE_RESOURCE_LOADER_CACHE;
+import static org.apache.velocity.runtime.RuntimeConstants.FILE_RESOURCE_LOADER_PATH;
+
 public class DefaultTemplate implements ITemplate {
     private final String lang;
     private final String title;
-    private final String footer;
 
     private final VelocityEngine mEngine;
 
     public DefaultTemplate() {
         this.lang = System.getenv("html.default.lang");
         this.title = System.getenv("html.default.title");
-        this.footer = System.getenv("html.default.footer");
 
         mEngine = new VelocityEngine();
-        mEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+        mEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file,classpath");
+        mEngine.setProperty(FILE_RESOURCE_LOADER_PATH, System.getenv("html.default.override"));
+        mEngine.setProperty(FILE_RESOURCE_LOADER_CACHE, true);
         mEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-        mEngine.setProperty("classpath.resource.loader.cache", true);
         mEngine.init();
     }
 
@@ -62,7 +64,6 @@ public class DefaultTemplate implements ITemplate {
         final VelocityContext ctx = new VelocityContext();
         ctx.put("lang", lang);
         ctx.put("title", title);
-        ctx.put("footer", footer);
         ctx.put("posts", posts);
         ctx.put("utils", this);
         ctx.put("service", service);
@@ -77,7 +78,6 @@ public class DefaultTemplate implements ITemplate {
         final VelocityContext ctx = new VelocityContext();
         ctx.put("lang", lang);
         ctx.put("title", title);
-        ctx.put("footer", footer);
         ctx.put("post", post);
         ctx.put("utils", this);
         ctx.put("service", service);
