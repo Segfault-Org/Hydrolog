@@ -1,12 +1,7 @@
 package segfault.hydrolog.posts.file;
 
 import com.google.auto.value.AutoValue;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import segfault.hydrolog.posts.IPost;
 import segfault.hydrolog.posts.IPostService;
 import segfault.hydrolog.posts.renderers.PrebuiltRenderers;
@@ -60,7 +55,7 @@ public class FilePostService implements IPostService {
         PrebuiltRenderers.getRenderer(extension).render(reader, writer);
 
         reader.close();
-        writer.close();
+        writer.flush();
     }
 
     @Nullable
@@ -105,7 +100,7 @@ public class FilePostService implements IPostService {
         PrebuiltRenderers.getRenderer(extension).render(reader, writer);
 
         reader.close();
-        writer.close();
+        writer.flush();
     }
 
 

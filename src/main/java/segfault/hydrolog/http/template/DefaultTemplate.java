@@ -1,11 +1,13 @@
 package segfault.hydrolog.http.template;
 
-import org.apache.commons.io.IOUtils;
 import segfault.hydrolog.posts.IPost;
 import segfault.hydrolog.posts.IPostService;
 
 import javax.annotation.Nonnull;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -22,45 +24,43 @@ public class DefaultTemplate implements ITemplate {
 
     @Override
     public void renderList(@Nonnull List<IPost> posts, @Nonnull IPostService service, @Nonnull OutputStream stream) throws Exception {
-        final ByteArrayOutputStream body = new ByteArrayOutputStream();
-        final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(body));
-        append(writer, "<dl>");
-        for (final IPost post : posts) {
-            append(writer, "<dt><a href=\"");
-            append(writer, post.path() + "\">");
-            append(writer, post.title());
-            append(writer, "</a>");
-            append(writer, ", by ");
-            append(writer, post.author());
-            append(writer, "</dt>");
-            append(writer, "<dd>");
-            final ByteArrayOutputStream descrOut = new ByteArrayOutputStream();
-            writer.flush();
-            service.renderDescr(post, descrOut);
-            descrOut.writeTo(body);
-            append(writer, "<br />");
-            // TODO: i18n
-            append(writer, "Created: ");
-            append(writer, new Date(post.created()).toString());
-            if (post.created() != post.modified()) {
-                append(writer, ", modified: ");
-                append(writer, new Date(post.modified()).toString());
+        renderBase(title, out -> {
+            final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
+            append(writer, "<dl>");
+            for (final IPost post : posts) {
+                append(writer, "<dt><a href=\"");
+                append(writer, post.path() + "\">");
+                append(writer, post.title());
+                append(writer, "</a>");
+                append(writer, ", by ");
+                append(writer, post.author());
+                append(writer, "</dt>");
+                append(writer, "<dd>");
+                writer.flush();
+                service.renderDescr(post, out);
+                append(writer, "<br />");
+                // TODO: i18n
+                append(writer, "Created: ");
+                append(writer, new Date(post.created()).toString());
+                if (post.created() != post.modified()) {
+                    append(writer, ", modified: ");
+                    append(writer, new Date(post.modified()).toString());
+                }
+                append(writer, "</dd>");
             }
-            append(writer, "</dd>");
-        }
-        append(writer, "</dl>");
+            append(writer, "</dl>");
 
-        renderBase(title, body, stream);
+        }, stream);
     }
 
     @Override
     public void renderPost(@Nonnull IPost post, @Nonnull IPostService service, @Nonnull OutputStream stream) throws Exception {
-        final ByteArrayOutputStream postOut = new ByteArrayOutputStream();
-        service.render(post, postOut);
-        renderBase(post.title(), postOut, stream);
+        renderBase(post.title(), out -> {
+            service.render(post, out);
+        }, stream);
     }
 
-    private void renderBase(@Nonnull CharSequence title, @Nonnull ByteArrayOutputStream body, @Nonnull OutputStream out) throws IOException {
+    private void renderBase(@Nonnull CharSequence title, @Nonnull IOnRenderBodyCallback callback, @Nonnull OutputStream out) throws Exception {
         final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
         append(writer, "<!DOCTYPE html>" +
                 "<html lang=\"" + lang + "\"><head><meta charset=\"utf-8\" /><title>");
@@ -69,7 +69,7 @@ public class DefaultTemplate implements ITemplate {
         append(writer, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
         append(writer, "</head><body>");
         writer.flush();
-        body.writeTo(out);
+        callback.onRenderBody(out);
 
         append(writer, "<footer>");
         if (footer != null) {
@@ -81,10 +81,13 @@ public class DefaultTemplate implements ITemplate {
 
         append(writer, "</body></html>");
         writer.close();
-        body.close();
     }
 
     private void append(@Nonnull Appendable appendable, @Nonnull CharSequence charSequence) throws IOException {
         appendable.append(charSequence);
+    }
+
+    private interface IOnRenderBodyCallback {
+        void onRenderBody(@Nonnull OutputStream out) throws Exception;
     }
 }
