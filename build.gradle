@@ -29,4 +29,7 @@ dependencies {
 
     // Renderers
     compile 'com.atlassian.commonmark:commonmark:0.15.2'
+
+    // Templates
+    compile 'org.apache.velocity:velocity:1.7'
 }

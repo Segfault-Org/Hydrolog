@@ -1,0 +1,4 @@
+#parse("root1.vm")
+            <h1>$post.title()</h1>
+            $utils.renderPost($post, $service)
+#parse("root2.vm")
