@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -32,20 +33,15 @@ public class DefaultTemplate implements ITemplate {
                 append(writer, post.path() + "\">");
                 append(writer, post.title());
                 append(writer, "</a>");
-                append(writer, ", by ");
+                // TODO: i18n
+                append(writer, " by ");
                 append(writer, post.author());
+                append(writer, ", ");
+                append(writer, new Date(post.created()).toString());
                 append(writer, "</dt>");
                 append(writer, "<dd>");
                 writer.flush();
                 service.renderDescr(post, out);
-                append(writer, "<br />");
-                // TODO: i18n
-                append(writer, "Created: ");
-                append(writer, new Date(post.created()).toString());
-                if (post.created() != post.modified()) {
-                    append(writer, ", modified: ");
-                    append(writer, new Date(post.modified()).toString());
-                }
                 append(writer, "</dd>");
             }
             append(writer, "</dl>");
@@ -55,7 +51,10 @@ public class DefaultTemplate implements ITemplate {
 
     @Override
     public void renderPost(@Nonnull IPost post, @Nonnull IPostService service, @Nonnull OutputStream stream) throws Exception {
-        renderBase(post.title(), out -> {
+        renderBase(String.format("%s - %s", post.title(), title), out -> {
+            out.write("<h1>".getBytes(StandardCharsets.UTF_8));
+            out.write(post.title().toString().getBytes(StandardCharsets.UTF_8));
+            out.write("</h1>".getBytes(StandardCharsets.UTF_8));
             service.render(post, out);
         }, stream);
     }
