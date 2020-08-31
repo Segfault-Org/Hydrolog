@@ -39,10 +39,12 @@ public class DefaultTemplate implements ITemplate {
                 append(writer, ", ");
                 append(writer, new Date(post.created()).toString());
                 append(writer, "</dt>");
-                append(writer, "<dd>");
-                writer.flush();
-                service.renderDescr(post, out);
-                append(writer, "</dd>");
+                if (post.descr() != null) {
+                    append(writer, "<dd>");
+                    writer.flush();
+                    service.renderDescr(post, out);
+                    append(writer, "</dd>");
+                }
             }
             append(writer, "</dl>");
 

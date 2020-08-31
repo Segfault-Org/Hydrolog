@@ -16,7 +16,7 @@ public interface IPost {
     @Nonnull
     String path();
 
-    @Nonnull
+    @Nullable
     String descr();
 
     @Nonnull
