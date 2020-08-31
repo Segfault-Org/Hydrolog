@@ -50,7 +50,7 @@ Therefore, Hydrolog may not seem to achieve your goals on blogging. However, alo
 
 - [x] Frontend redo (I'm sorry, but I have no knowledge on frontent)
 
-- [ ] Add uptime footer widget
+- [x] Add uptime footer widget
 
 - [ ] Support custom second level index pages
 

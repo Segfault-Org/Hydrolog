@@ -20,6 +20,6 @@
             #end
         </dl>
     </div>
-    #include("footer.vm")
+    #parse("footer.vm")
 </body>
 </html>

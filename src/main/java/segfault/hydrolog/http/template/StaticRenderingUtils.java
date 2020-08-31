@@ -1,9 +1,11 @@
 package segfault.hydrolog.http.template;
 
+import segfault.hydrolog.nativelib.Uptime;
 import segfault.hydrolog.posts.IPost;
 import segfault.hydrolog.posts.IPostService;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
@@ -29,5 +31,20 @@ public final class StaticRenderingUtils {
 
     public static String renderDate(long date) {
         return new Date(date).toString();
+    }
+
+    @Nullable
+    public static String systemUptime() {
+        try {
+            final long sec = Uptime.uptime();
+            final long hours = sec / 3600;
+            final long min = (sec % 3600) / 60;
+            final long fSec = sec % 60;
+
+            return String.format("%02d:%02d:%02d", hours, min, fSec);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
