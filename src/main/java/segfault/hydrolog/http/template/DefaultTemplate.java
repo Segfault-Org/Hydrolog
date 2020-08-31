@@ -10,24 +10,22 @@ import segfault.hydrolog.posts.IPostService;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Date;
 import java.util.List;
 
 import static org.apache.velocity.runtime.RuntimeConstants.FILE_RESOURCE_LOADER_CACHE;
 import static org.apache.velocity.runtime.RuntimeConstants.FILE_RESOURCE_LOADER_PATH;
 
 public class DefaultTemplate implements ITemplate {
-    private final String lang;
-    private final String title;
+    private final VelocityContext mRootContext;
 
     private final VelocityEngine mEngine;
 
     public DefaultTemplate() {
-        this.lang = System.getenv("html.default.lang");
-        this.title = System.getenv("html.default.title");
+        mRootContext = new VelocityContext();
+        mRootContext.put("lang", System.getenv("html.default.lang"));
+        mRootContext.put("title", System.getenv("html.default.title"));
 
         mEngine = new VelocityEngine();
         mEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file,classpath");
@@ -37,35 +35,13 @@ public class DefaultTemplate implements ITemplate {
         mEngine.init();
     }
 
-    public CharSequence renderDescr(@Nonnull IPost post, @Nonnull IPostService service) throws Exception {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        service.renderDescr(post, out);
-        final String str = out.toString();
-        out.close();
-        return str;
-    }
-
-    public CharSequence renderPost(@Nonnull IPost post, @Nonnull IPostService service) throws Exception {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        service.render(post, out);
-        final String str = out.toString();
-        out.close();
-        return str;
-    }
-
-    public String renderDate(long date) {
-        return new Date(date).toString();
-    }
-
     @Override
     public void renderList(@Nonnull List<IPost> posts, @Nonnull IPostService service, @Nonnull OutputStream stream) throws Exception {
         final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
         final Template t = mEngine.getTemplate("list.vm");
-        final VelocityContext ctx = new VelocityContext();
-        ctx.put("lang", lang);
-        ctx.put("title", title);
+        final VelocityContext ctx = new VelocityContext(mRootContext);
         ctx.put("posts", posts);
-        ctx.put("utils", this);
+        ctx.put("utils", StaticRenderingUtils.class);
         ctx.put("service", service);
         t.merge(ctx, writer);
         writer.close();
@@ -75,11 +51,9 @@ public class DefaultTemplate implements ITemplate {
     public void renderPost(@Nonnull IPost post, @Nonnull IPostService service, @Nonnull OutputStream stream) throws Exception {
         final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
         final Template t = mEngine.getTemplate("post.vm");
-        final VelocityContext ctx = new VelocityContext();
-        ctx.put("lang", lang);
-        ctx.put("title", title);
+        final VelocityContext ctx = new VelocityContext(mRootContext);
         ctx.put("post", post);
-        ctx.put("utils", this);
+        ctx.put("utils", StaticRenderingUtils.class);
         ctx.put("service", service);
         t.merge(ctx, writer);
         writer.close();
