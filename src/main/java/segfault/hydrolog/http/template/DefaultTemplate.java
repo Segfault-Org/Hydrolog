@@ -17,6 +17,42 @@ public class DefaultTemplate implements ITemplate {
     private final String title;
     private final String footer;
 
+    // Copied from postfix.org.
+    private static final String CSS = "" +
+            "BODY {\n" +
+            "    margin-left: 10px;\n" +
+            "    margin-right: 10px;\n" +
+            "    }\n" +
+            "#left {\n" +
+            "    border: 0px;\n" +
+            "    float: left;\n" +
+            "    margin-left: 10px;\n" +
+            "    width: 140px;\n" +
+            "    }\n" +
+            "#main {\n" +
+            "    border: 0px;\n" +
+            "    font-weight: normal; \n" +
+            "    margin-left: 180px;\n" +
+            "    }\n" +
+            ".nav { \n" +
+            "    font-size: small;\n" +
+            "    line-height: 45%;\n" +
+            "    text-decoration: none; \n" +
+            "    white-space: nowrap; \n" +
+            "    } \n" +
+            ".navhead { \n" +
+            "    font-size: medium;\n" +
+            "    line-height: 90%;\n" +
+            "    padding-left: 0px;\n" +
+            "    text-decoration: none; \n" +
+            "    }\n" +
+            ".footer {\n" +
+            "    left: 0;\n" +
+            "    bottom: 0;\n" +
+            "    width: 100%;\n" +
+            "    text-align: center;\n" +
+            "}";
+
     public DefaultTemplate() {
         this.lang = System.getenv("html.default.lang");
         this.title = System.getenv("html.default.title");
@@ -68,17 +104,26 @@ public class DefaultTemplate implements ITemplate {
         append(writer, title);
         append(writer, "</title>");
         append(writer, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+        append(writer, "<style type=\"text/css\">");
+        append(writer, CSS);
+        append(writer, "</style>");
         append(writer, "</head><body>");
+        append(writer, "<div id=\"left\">");
+        append(writer, "<p class=\"nav\"><a href=\"/\">Home</a></p>");
+        append(writer, "<p class=\"navhead\"></p>");
+        append(writer, "</div>");
+        append(writer, "<div id=\"main\">");
         writer.flush();
         callback.onRenderBody(out);
+        append(writer, "</div>");
 
-        append(writer, "<footer>");
+        append(writer, "<div class=\"footer\">");
         if (footer != null) {
             append(writer, "<p>");
             append(writer, footer);
             append(writer, "</p>");
         }
-        append(writer, "</footer>");
+        append(writer, "</div>");
 
         append(writer, "</body></html>");
         writer.close();

@@ -48,7 +48,7 @@ Therefore, Hydrolog may not seem to achieve your goals on blogging. However, alo
 
 - [ ] Search by post tags / categories / authors
 
-- [ ] Frontend redo (I'm sorry, but I have no knowledge on frontent)
+- [x] Frontend redo (I'm sorry, but I have no knowledge on frontent)
 
 - [ ] Add uptime footer widget
 
