@@ -105,6 +105,11 @@ public class FilePostServiceTest {
                 null,
                 name,
                 post6));
+
+        // Post 6: No read permissions
+        final File post7 = new File(mTemp, "permission denied.html");
+        post7.createNewFile();
+        post7.setReadable(false);
     }
 
     @After

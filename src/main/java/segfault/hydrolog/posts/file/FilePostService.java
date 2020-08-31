@@ -68,7 +68,7 @@ public class FilePostService implements IPostService {
     @Nullable
     private IPost fileToPost(@Nonnull File file) throws IOException {
         // The reason not to use isHidden() is that the directory test (see below) matches only '.'.
-        if (!file.exists() || !file.isFile() || file.getName().startsWith(".")) return null;
+        if (!file.exists() || !file.isFile() || file.getName().startsWith(".") || !file.canRead()) return null;
 
         final String relativePath = file.getAbsolutePath().substring(mRoot.toUri().getPath().length());
         // Belonging in any hidden directory would result in hidden.
