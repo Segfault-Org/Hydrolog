@@ -29,6 +29,8 @@ public class DefaultTemplate implements ITemplate {
         mRootContext.put("utils", StaticRenderingUtils.class);
 
         mEngine = new VelocityEngine();
+        mEngine.setProperty("input.encoding", "utf-8");
+        mEngine.setProperty("output.encoding", "utf-8");
         mEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file,classpath");
         mEngine.setProperty(FILE_RESOURCE_LOADER_PATH, System.getenv("html_default_override"));
         mEngine.setProperty(FILE_RESOURCE_LOADER_CACHE, true);
