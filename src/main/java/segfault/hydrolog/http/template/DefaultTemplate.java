@@ -24,13 +24,13 @@ public class DefaultTemplate implements ITemplate {
 
     public DefaultTemplate() {
         mRootContext = new VelocityContext();
-        mRootContext.put("lang", System.getenv("html.default.lang"));
-        mRootContext.put("title", System.getenv("html.default.title"));
+        mRootContext.put("lang", System.getenv("html_default_lang"));
+        mRootContext.put("title", System.getenv("html_default_title"));
         mRootContext.put("utils", StaticRenderingUtils.class);
 
         mEngine = new VelocityEngine();
         mEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file,classpath");
-        mEngine.setProperty(FILE_RESOURCE_LOADER_PATH, System.getenv("html.default.override"));
+        mEngine.setProperty(FILE_RESOURCE_LOADER_PATH, System.getenv("html_default_override"));
         mEngine.setProperty(FILE_RESOURCE_LOADER_CACHE, true);
         mEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
         mEngine.init();

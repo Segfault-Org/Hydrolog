@@ -34,7 +34,7 @@ public class HttpServer implements HttpHandler {
         mServer.setExecutor(mPool);
         mServer.createContext("/", this);
 
-        mService = new FilePostService(new File(System.getenv("post.file.root")).toPath());
+        mService = new FilePostService(new File(System.getenv("post_file_root")).toPath());
 
         mTemplate = new DefaultTemplate();
     }

@@ -62,16 +62,16 @@ You can configure it by setting environment variables, which is easy to support 
 
 ```
 # HTTP Server
-http.addr=0.0.0.0 # Bind address
-http.port=80 # Listen port
+http_addr = 0.0.0.0 # Bind address
+http_port = 80 # Listen port
 
 # File Post service
-post.file.root=/mnt/your/post/root/dir/ # Posts root dir
+post_file_root = /mnt/your/post/root/dir/ # Posts root dir
 
 # Default HTML Template
-html.default.lang=en # HTML lang tag
-html.default.title=My blog # Homepage title
-html.default.override=. # Velocity override folder
+html_default_lang = en # HTML lang tag
+html_default_title = My blog # Homepage title
+html_default_override = _ # Velocity override folder
 ```
 
 # License
