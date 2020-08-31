@@ -1,0 +1,4 @@
+<div class="footer">
+    <!-- Add your own footer -->
+    <p>Uptime: $utils.systemUptime()</p>
+</div>

@@ -13,11 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FilePostServiceTest {
     private File mTemp;
@@ -86,12 +86,30 @@ public class FilePostServiceTest {
                 StandardCharsets.UTF_8.name(),
                 Arrays.asList("<h1>The hidden garden</h1>",
                         "<p>Although this file exists on the server, it is not visible.</p>"));
-        final File post5= new File(subDir1, "Hello1.html");
+        final File post5 = new File(subDir1, "Hello1.html");
         post5.createNewFile();
         org.apache.commons.io.FileUtils.writeLines(post5,
                 StandardCharsets.UTF_8.name(),
                 Arrays.asList("<h1>The hidden garden</h1>",
                         "<p>Although this file exists on the server, it is not visible.</p>"));
+
+        // Part 5: Empty files
+        final File post6 = new File(mTemp, "empty.md");
+        post6.createNewFile();
+        final BasicFileAttributes attr6 = Files.readAttributes(post6.toPath(), BasicFileAttributes.class);
+        mDesiredPosts.add(FilePost.create((long) Files.getAttribute(post6.toPath(), "unix:ino"),
+                "empty",
+                attr6.creationTime().toMillis(),
+                attr6.lastModifiedTime().toMillis(),
+                "empty.md",
+                null,
+                name,
+                post6));
+
+        // Post 6: No read permissions
+        final File post7 = new File(mTemp, "permission denied.html");
+        post7.createNewFile();
+        post7.setReadable(false);
     }
 
     @After
@@ -112,6 +130,7 @@ public class FilePostServiceTest {
         final List<String> desired = new ArrayList<>(5);
         desired.add("<h1>Welcome to my blog</h1><p>Paragraph 1</p>");
         desired.add("<h1>XXXXX 中文教程</h1><p>你知道吗？这个程序还可以读取 <strong>中文</strong> 哦（</p>");
+        desired.add("");
 
         final List<String> actual = mDesiredPosts.stream()
                 .map(post -> {

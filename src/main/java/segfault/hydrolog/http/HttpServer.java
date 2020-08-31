@@ -9,22 +9,16 @@ import segfault.hydrolog.posts.IPostService;
 import segfault.hydrolog.posts.file.FilePostService;
 
 import javax.annotation.Nonnull;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class HttpServer implements HttpHandler {
     private final Logger logger = Logger.getLogger("HttpServer");
@@ -40,7 +34,7 @@ public class HttpServer implements HttpHandler {
         mServer.setExecutor(mPool);
         mServer.createContext("/", this);
 
-        mService = new FilePostService(new File(System.getenv("post.file.root")).toPath());
+        mService = new FilePostService(new File(System.getenv("post_file_root")).toPath());
 
         mTemplate = new DefaultTemplate();
     }
@@ -93,8 +87,6 @@ public class HttpServer implements HttpHandler {
     }
 
     private void renderPost(@Nonnull OutputStream out, @Nonnull IPost post) throws Exception {
-        final ByteArrayOutputStream postOut = new ByteArrayOutputStream();
         mTemplate.renderPost(post, mService, out);
-        postOut.close();
     }
 }
