@@ -7,6 +7,7 @@ import segfault.hydrolog.posts.IPostService;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @SuppressWarnings("unused")
@@ -31,6 +32,10 @@ public final class StaticRenderingUtils {
 
     public static String renderDate(long date) {
         return new Date(date).toString();
+    }
+
+    public static String renderDate(long date, @Nonnull String format) {
+        return new SimpleDateFormat(format).format(new Date(date));
     }
 
     @Nullable

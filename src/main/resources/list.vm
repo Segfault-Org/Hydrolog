@@ -10,7 +10,7 @@
         <dl>
             #foreach( $post in $posts )
             <dt>
-                <a href="$post.path()">$post.title()</a> by $post.author(), $utils.renderDate($post.created())
+                <a href="$post.path()">$post.title()</a> by $post.author(), $utils.renderDate($post.created(), "mm/dd/yyyy")
             </dt>
             #if ( $post.descr() )
             <dd>
